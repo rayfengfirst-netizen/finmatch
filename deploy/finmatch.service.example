@@ -1,0 +1,26 @@
+# 复制到服务器：sudo cp deploy/finmatch.service.example /etc/systemd/system/finmatch.service
+# 若路径不同，请修改 WorkingDirectory / ExecStart
+#
+# sudo systemctl daemon-reload && sudo systemctl enable --now finmatch
+
+[Unit]
+Description=FinMatch 财配台 (FastAPI + Gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/finmatch/backend
+Environment=PATH=/opt/finmatch/backend/.venv/bin
+ExecStart=/opt/finmatch/backend/.venv/bin/gunicorn app.main:app \
+  -k uvicorn.workers.UvicornWorker \
+  -w 2 \
+  -b 0.0.0.0:8870 \
+  --timeout 300 \
+  --access-logfile - \
+  --error-logfile -
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

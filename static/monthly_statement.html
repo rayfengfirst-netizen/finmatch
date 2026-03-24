@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>月度对账单 · 财配台</title>
+  <link rel="stylesheet" href="/assets/css/app.css" />
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">← 返回工具总面板</a>
+    <h1>月度对账单</h1>
+    <p class="sub">上传「出入库记录」（.xlsx）与「账单」（.xlsx，需含采购单号、SKU、数量、合计金额等列）。系统会按采购单号↔来源单号、SKU↔sku 汇总变动与入库总价，与账单数量、金额比对；金额与数量在导出中统一保留两位小数。每次对账会保存上传文件与结果，可在下方历史记录中下载。</p>
+
+    <div class="card">
+      <div class="file-row">
+        <label for="inout">出入库记录</label>
+        <input type="file" id="inout" />
+      </div>
+      <div class="file-row">
+        <label for="supplier">供应商对账单</label>
+        <input type="file" id="supplier" />
+      </div>
+
+      <button type="button" class="primary" id="submit">开始对账并生成结果</button>
+    </div>
+
+    <div class="card">
+      <label>本次处理结果</label>
+      <pre id="out">尚未提交。</pre>
+      <div class="download-row" id="dl-wrap" hidden>
+        <a id="dl-link" href="#" download>下载对账结果文件</a>
+        <span id="dl-extra" class="muted-small"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>历史记录</label>
+      <p class="muted-small">按时间倒序，可下载当次上传的出入库、账单及生成的对账结果。</p>
+      <div id="history-loading" class="muted-small">加载中…</div>
+      <div id="history-empty" class="muted-small" hidden>暂无记录。完成一次对账后将显示在此。</div>
+      <table class="history-table" id="history-table" hidden>
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>摘要</th>
+            <th>下载</th>
+          </tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const inoutEl = document.getElementById("inout");
+    const supplierEl = document.getElementById("supplier");
+    const outEl = document.getElementById("out");
+    const btn = document.getElementById("submit");
+    const dlWrap = document.getElementById("dl-wrap");
+    const dlLink = document.getElementById("dl-link");
+    const dlExtra = document.getElementById("dl-extra");
+    const historyLoading = document.getElementById("history-loading");
+    const historyEmpty = document.getElementById("history-empty");
+    const historyTable = document.getElementById("history-table");
+    const historyBody = document.getElementById("history-body");
+
+    function formatTime(iso) {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleString("zh-CN", { hour12: false });
+    }
+
+    function formatSummary(s) {
+      if (!s || typeof s !== "object") return "—";
+      const parts = [];
+      if (s.bill_rows != null) parts.push("账单行 " + s.bill_rows);
+      if (s.rows_with_any_diff != null) parts.push("有差异行 " + s.rows_with_any_diff);
+      return parts.length ? parts.join(" · ") : "—";
+    }
+
+    async function loadHistory() {
+      historyLoading.hidden = false;
+      historyEmpty.hidden = true;
+      historyTable.hidden = true;
+      try {
+        const r = await fetch("/api/monthly-statement/runs");
+        const data = await r.json();
+        const runs = data.runs || [];
+        historyLoading.hidden = true;
+        if (!runs.length) {
+          historyEmpty.hidden = false;
+          return;
+        }
+        historyBody.innerHTML = "";
+        for (const row of runs) {
+          const tr = document.createElement("tr");
+          const td1 = document.createElement("td");
+          td1.textContent = formatTime(row.created_at);
+          const td2 = document.createElement("td");
+          td2.textContent = formatSummary(row.summary);
+          const td3 = document.createElement("td");
+          td3.className = "actions";
+          const a1 = document.createElement("a");
+          a1.href = row.result_download_url;
+          a1.textContent = "对账结果";
+          a1.setAttribute("download", "");
+          const a2 = document.createElement("a");
+          a2.href = row.inout_download_url;
+          a2.textContent = "出入库";
+          a2.setAttribute("download", "");
+          const a3 = document.createElement("a");
+          a3.href = row.supplier_download_url;
+          a3.textContent = "账单";
+          a3.setAttribute("download", "");
+          td3.appendChild(a1);
+          td3.appendChild(a2);
+          td3.appendChild(a3);
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tr.appendChild(td3);
+          historyBody.appendChild(tr);
+        }
+        historyTable.hidden = false;
+      } catch (e) {
+        historyLoading.textContent = "加载历史失败：" + e;
+      }
+    }
+
+    btn.addEventListener("click", async () => {
+      const inout = inoutEl.files?.[0];
+      const supplier = supplierEl.files?.[0];
+      if (!inout || !supplier) {
+        outEl.className = "err";
+        outEl.textContent = "请同时选择两份文件。";
+        dlWrap.hidden = true;
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("inout_file", inout);
+      fd.append("supplier_file", supplier);
+
+      btn.disabled = true;
+      dlWrap.hidden = true;
+      dlExtra.textContent = "";
+      outEl.className = "";
+      outEl.textContent = "上传并处理中…";
+      try {
+        const r = await fetch("/api/monthly-statement/run", {
+          method: "POST",
+          body: fd,
+        });
+        const text = await r.text();
+        let body;
+        try { body = JSON.parse(text); } catch { body = text; }
+        if (!r.ok) {
+          outEl.className = "err";
+          outEl.textContent = typeof body === "object"
+            ? JSON.stringify(body, null, 2)
+            : text;
+        } else {
+          outEl.className = "ok";
+          outEl.textContent = JSON.stringify(body, null, 2);
+          if (body.download_url) {
+            dlLink.href = body.download_url;
+            dlLink.textContent = "下载对账结果文件";
+            dlWrap.hidden = false;
+            const t = body.created_at ? formatTime(body.created_at) : "";
+            dlExtra.textContent = t ? "（" + t + "）" : "";
+          }
+        }
+        loadHistory();
+      } catch (e) {
+        outEl.className = "err";
+        outEl.textContent = String(e);
+        dlWrap.hidden = true;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    loadHistory();
+  </script>
+</body>
+</html>

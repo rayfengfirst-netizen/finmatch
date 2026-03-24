@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# 服务器路径：/opt/finmatch/deploy.sh
+# 首次：cp deploy/deploy.sh.example /opt/finmatch/deploy.sh && chmod +x /opt/finmatch/deploy.sh
+set -euo pipefail
+
+cd /opt/finmatch
+git pull origin main
+
+cd backend
+source .venv/bin/activate
+pip install -r requirements.txt
+
+systemctl restart finmatch
+systemctl status finmatch --no-pager
+
+echo "OK: http://127.0.0.1:8870/api/health"
+curl -sS http://127.0.0.1:8870/api/health || true
