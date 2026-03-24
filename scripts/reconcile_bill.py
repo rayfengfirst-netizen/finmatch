@@ -36,6 +36,46 @@ def load_bill_excel(path: Path) -> dict:
     return {"ok": True, "df": df}
 
 
+def aggregate_bill_rows(bill_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    账单预处理：同一供应商 + 采购单号 + SKU 若有多条，先做汇总再参与对账。
+    数量、合计金额求和，并新增「账单汇总条数」。
+    """
+    bill = bill_df.copy()
+    bill.columns = bill.columns.astype(str).str.strip()
+
+    for c in BILL_REQUIRED:
+        if c not in bill.columns:
+            raise ValueError(f"账单缺少列「{c}」")
+
+    group_keys: list[str] = ["采购单号", "SKU"]
+    if "供应商名称" in bill.columns:
+        group_keys = ["供应商名称"] + group_keys
+
+    bill["采购单号"] = bill["采购单号"].astype(str).str.strip()
+    bill["SKU"] = bill["SKU"].astype(str).str.strip()
+    bill["数量"] = pd.to_numeric(bill["数量"], errors="coerce").fillna(0)
+    bill["合计金额"] = pd.to_numeric(bill["合计金额"], errors="coerce").fillna(0)
+
+    agg_spec: dict[str, tuple[str, str]] = {
+        "数量": ("数量", "sum"),
+        "合计金额": ("合计金额", "sum"),
+        "账单汇总条数": ("SKU", "size"),
+    }
+    if "日期" in bill.columns:
+        agg_spec["日期"] = ("日期", "first")
+    if "含运税价" in bill.columns:
+        agg_spec["含运税价"] = ("含运税价", "first")
+
+    grouped = bill.groupby(group_keys, as_index=False).agg(**agg_spec)
+    if "含运税价" in grouped.columns:
+        qty = pd.to_numeric(grouped["数量"], errors="coerce")
+        amt = pd.to_numeric(grouped["合计金额"], errors="coerce")
+        grouped["含运税价"] = (amt / qty.where(qty != 0)).fillna(0)
+
+    return grouped
+
+
 def reconcile_bill_rows(inout_df: pd.DataFrame, bill_df: pd.DataFrame) -> pd.DataFrame:
     """
     按「采购单号」「SKU」与出入库「来源单号」「sku」对齐，汇总后追加列并计算差异。
@@ -47,11 +87,7 @@ def reconcile_bill_rows(inout_df: pd.DataFrame, bill_df: pd.DataFrame) -> pd.Dat
         if c not in inv.columns:
             raise ValueError(f"出入库表缺少列「{c}」")
 
-    bill = bill_df.copy()
-    bill.columns = bill.columns.astype(str).str.strip()
-    for c in BILL_REQUIRED:
-        if c not in bill.columns:
-            raise ValueError(f"账单缺少列「{c}」")
+    bill = aggregate_bill_rows(bill_df)
 
     inv = inv.copy()
     inv["来源单号"] = inv["来源单号"].astype(str).str.strip()
