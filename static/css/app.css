@@ -45,77 +45,15 @@ body.home .wrap {
 }
 
 .home-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem 1.5rem;
   margin-bottom: 1.5rem;
 }
 
 .home-header__titles {
-  flex: 1;
-  min-width: 200px;
+  min-width: 0;
 }
 
 .home-header h1 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-/* 日期挂件 */
-.date-pendant {
-  position: relative;
-  flex-shrink: 0;
-  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.08));
-}
-
-.date-pendant__ribbon {
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 36px;
-  height: 14px;
-  background: linear-gradient(180deg, #fb7185 0%, #f43f5e 100%);
-  border-radius: 4px 4px 2px 2px;
-  box-shadow: 0 2px 4px rgba(244, 63, 94, 0.35);
-}
-
-.date-pendant__inner {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.65rem 0.9rem 0.65rem 0.75rem;
-  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  border-radius: 14px;
-  min-width: 9.5rem;
-}
-
-.date-pendant__day {
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1;
-  color: #4f46e5;
-  font-variant-numeric: tabular-nums;
-}
-
-.date-pendant__meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  font-size: 0.78rem;
-  color: var(--muted);
-  line-height: 1.35;
-}
-
-.date-pendant__ym {
-  font-weight: 600;
-  color: #334155;
-}
-
-.date-pendant__week {
-  color: #64748b;
 }
 
 .wrap {

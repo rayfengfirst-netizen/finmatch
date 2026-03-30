@@ -13,16 +13,6 @@
         <h1>财配台 FinMatch</h1>
         <p class="sub">选择下方功能进入对应页面。后续会在此陆续接入更多财务工具。</p>
       </div>
-      <div class="date-pendant" id="date-pendant" aria-live="polite">
-        <div class="date-pendant__ribbon" aria-hidden="true"></div>
-        <div class="date-pendant__inner">
-          <span class="date-pendant__day" id="date-day">—</span>
-          <div class="date-pendant__meta">
-            <span class="date-pendant__ym" id="date-ym">—</span>
-            <span class="date-pendant__week" id="date-week">—</span>
-          </div>
-        </div>
-      </div>
     </header>
 
     <div class="tool-grid">
@@ -56,18 +46,5 @@
       </a>
     </div>
   </div>
-
-  <script>
-    (function () {
-      var wk = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-      var d = new Date();
-      var y = d.getFullYear();
-      var m = d.getMonth() + 1;
-      var day = d.getDate();
-      document.getElementById("date-day").textContent = String(day);
-      document.getElementById("date-ym").textContent = y + "年" + m + "月";
-      document.getElementById("date-week").textContent = wk[d.getDay()];
-    })();
-  </script>
 </body>
 </html>
