@@ -20,6 +20,104 @@ body {
   min-height: 100vh;
 }
 
+/* —— 首页：背景与抬头 —— */
+body.home {
+  background:
+    radial-gradient(ellipse 120% 80% at 100% 0%, rgba(199, 210, 254, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 0% 100%, rgba(254, 215, 170, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0%, #f1f5f9 100%);
+  background-attachment: fixed;
+}
+
+body.home::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: 0;
+}
+
+body.home .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.home-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.home-header__titles {
+  flex: 1;
+  min-width: 200px;
+}
+
+.home-header h1 {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* 日期挂件 */
+.date-pendant {
+  position: relative;
+  flex-shrink: 0;
+  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.08));
+}
+
+.date-pendant__ribbon {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 14px;
+  background: linear-gradient(180deg, #fb7185 0%, #f43f5e 100%);
+  border-radius: 4px 4px 2px 2px;
+  box-shadow: 0 2px 4px rgba(244, 63, 94, 0.35);
+}
+
+.date-pendant__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.9rem 0.65rem 0.75rem;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 14px;
+  min-width: 9.5rem;
+}
+
+.date-pendant__day {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #4f46e5;
+  font-variant-numeric: tabular-nums;
+}
+
+.date-pendant__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.date-pendant__ym {
+  font-weight: 600;
+  color: #334155;
+}
+
+.date-pendant__week {
+  color: #64748b;
+}
+
 .wrap {
   max-width: 880px;
   margin: 0 auto;
@@ -66,20 +164,57 @@ h1 {
 }
 
 .tool-card {
-  display: block;
-  padding: 1.25rem 1.35rem;
-  background: var(--card);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.15rem 1.25rem;
+  background: linear-gradient(160deg, #ffffff 0%, #fafafa 100%);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 14px;
   text-decoration: none;
   color: inherit;
   box-shadow: var(--shadow);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
 .tool-card:hover {
   border-color: #c7d2fe;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+}
+
+.tool-card__icon {
+  flex-shrink: 0;
+  width: 3.1rem;
+  height: 3.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.65rem;
+  line-height: 1;
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.tool-card--reconcile .tool-card__icon {
+  background: linear-gradient(145deg, #fce7f3 0%, #fbcfe8 45%, #fda4af 100%);
+}
+
+.tool-card--amazon .tool-card__icon {
+  background: linear-gradient(145deg, #ffedd5 0%, #fdba74 50%, #fb923c 100%);
+}
+
+.tool-card--ebay .tool-card__icon {
+  background: linear-gradient(145deg, #e0f2fe 0%, #7dd3fc 45%, #38bdf8 100%);
+}
+
+.tool-card--customs .tool-card__icon {
+  background: linear-gradient(145deg, #d1fae5 0%, #6ee7b7 45%, #34d399 100%);
+}
+
+.tool-card__body {
+  flex: 1;
+  min-width: 0;
 }
 
 .tool-card h2 {

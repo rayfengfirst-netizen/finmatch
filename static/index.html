@@ -6,29 +6,68 @@
   <title>财配台 · 工具总面板</title>
   <link rel="stylesheet" href="/assets/css/app.css" />
 </head>
-<body>
+<body class="home">
   <div class="wrap">
-    <h1>财配台 FinMatch</h1>
-    <p class="sub">选择下方功能进入对应页面。后续会在此陆续接入更多财务工具。</p>
+    <header class="home-header">
+      <div class="home-header__titles">
+        <h1>财配台 FinMatch</h1>
+        <p class="sub">选择下方功能进入对应页面。后续会在此陆续接入更多财务工具。</p>
+      </div>
+      <div class="date-pendant" id="date-pendant" aria-live="polite">
+        <div class="date-pendant__ribbon" aria-hidden="true"></div>
+        <div class="date-pendant__inner">
+          <span class="date-pendant__day" id="date-day">—</span>
+          <div class="date-pendant__meta">
+            <span class="date-pendant__ym" id="date-ym">—</span>
+            <span class="date-pendant__week" id="date-week">—</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
     <div class="tool-grid">
-      <a class="tool-card" href="/monthly-statement">
-        <h2>月度对账单</h2>
-        <p>上传出入库与账单，自动汇总、比对并下载结果。</p>
+      <a class="tool-card tool-card--reconcile" href="/monthly-statement">
+        <span class="tool-card__icon" role="img" aria-label="对账">🧾</span>
+        <div class="tool-card__body">
+          <h2>月度对账单</h2>
+          <p>上传出入库与账单，自动汇总、比对并下载结果。</p>
+        </div>
       </a>
-      <a class="tool-card" href="http://8.218.58.28:6565/" target="_blank" rel="noopener noreferrer">
-        <h2>Amazon Summary 解析</h2>
-        <p>上传 Summary 压缩包或多份 PDF，解析并生成 Excel（独立服务，新标签页打开）。</p>
+      <a class="tool-card tool-card--amazon" href="http://8.218.58.28:6565/" target="_blank" rel="noopener noreferrer">
+        <span class="tool-card__icon" role="img" aria-label="包裹与报表">📦</span>
+        <div class="tool-card__body">
+          <h2>Amazon Summary 解析</h2>
+          <p>上传 Summary 压缩包或多份 PDF，解析并生成 Excel（独立服务，新标签页打开）。</p>
+        </div>
       </a>
-      <a class="tool-card" href="http://8.218.58.28:6565/ebay-finance?job=a9bca88b4dd0474c8da5f167a940bc7d" target="_blank" rel="noopener noreferrer">
-        <h2>eBay 财务报告解析</h2>
-        <p>上传财务报告 PDF 压缩包或多文件，维护汇率后解析并导出 Excel（独立服务，新标签页打开）。</p>
+      <a class="tool-card tool-card--ebay" href="http://8.218.58.28:6565/ebay-finance?job=a9bca88b4dd0474c8da5f167a940bc7d" target="_blank" rel="noopener noreferrer">
+        <span class="tool-card__icon" role="img" aria-label="财务图表">📊</span>
+        <div class="tool-card__body">
+          <h2>eBay 财务报告解析</h2>
+          <p>上传财务报告 PDF 压缩包或多文件，维护汇率后解析并导出 Excel（独立服务，新标签页打开）。</p>
+        </div>
       </a>
-      <a class="tool-card" href="http://8.218.58.28:8008/" target="_blank" rel="noopener noreferrer">
-        <h2>报关单核销台账系统</h2>
-        <p>按公司管理报关单、发票与核销关系，支持导入、重算与台账导出（独立服务，新标签页打开）。</p>
+      <a class="tool-card tool-card--customs" href="http://8.218.58.28:8008/" target="_blank" rel="noopener noreferrer">
+        <span class="tool-card__icon" role="img" aria-label="报关与单证">🛃</span>
+        <div class="tool-card__body">
+          <h2>报关单核销台账系统</h2>
+          <p>按公司管理报关单、发票与核销关系，支持导入、重算与台账导出（独立服务，新标签页打开）。</p>
+        </div>
       </a>
     </div>
   </div>
+
+  <script>
+    (function () {
+      var wk = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+      var d = new Date();
+      var y = d.getFullYear();
+      var m = d.getMonth() + 1;
+      var day = d.getDate();
+      document.getElementById("date-day").textContent = String(day);
+      document.getElementById("date-ym").textContent = y + "年" + m + "月";
+      document.getElementById("date-week").textContent = wk[d.getDay()];
+    })();
+  </script>
 </body>
 </html>
