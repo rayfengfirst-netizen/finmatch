@@ -11,24 +11,6 @@
     <h1>财配台 FinMatch</h1>
     <p class="sub">选择下方功能进入对应页面。后续会在此陆续接入更多财务工具。</p>
 
-    <div class="card">
-      <label>服务状态与快捷入口</label>
-      <div class="status-line" style="margin-top:0.35rem;">
-        <span class="status-dot" id="health-dot" aria-hidden="true"></span>
-        <span id="health-text">正在检测…</span>
-        <span class="muted-small" id="health-origin"></span>
-      </div>
-      <ul class="link-list">
-        <li><a href="/monthly-statement">月度对账单</a></li>
-        <li><a href="http://8.218.58.28:6565/" target="_blank" rel="noopener noreferrer">Amazon Summary 解析（6565）</a></li>
-        <li><a href="/api/health" target="_blank" rel="noopener">健康检查 JSON（/api/health）</a></li>
-        <li><a href="/docs" target="_blank" rel="noopener">接口文档（Swagger）</a></li>
-        <li><a href="https://github.com/rayfengfirst-netizen/finmatch/blob/main/docs/REQUIREMENTS_MONTHLY_RECONCILIATION.md" target="_blank" rel="noopener">月度对账需求说明（GitHub）</a></li>
-        <li><a href="https://github.com/rayfengfirst-netizen/finmatch/blob/main/README_DEPLOY.md" target="_blank" rel="noopener">部署说明（GitHub）</a></li>
-      </ul>
-      <p class="muted-small" style="margin-bottom:0;">线上典型地址：<code>http://8.218.58.28:8870/</code>（端口以实际部署为准）</p>
-    </div>
-
     <div class="tool-grid">
       <a class="tool-card" href="/monthly-statement">
         <h2>月度对账单</h2>
@@ -40,28 +22,5 @@
       </a>
     </div>
   </div>
-
-  <script>
-    (function () {
-      const dot = document.getElementById("health-dot");
-      const text = document.getElementById("health-text");
-      const originEl = document.getElementById("health-origin");
-      originEl.textContent = "当前站点：" + window.location.origin;
-
-      fetch("/api/health")
-        .then(function (r) {
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          return r.json();
-        })
-        .then(function (j) {
-          dot.classList.add("ok");
-          text.textContent = "服务正常（" + (j.service || "finmatch") + "）";
-        })
-        .catch(function () {
-          dot.classList.add("err");
-          text.textContent = "服务不可用或网络异常";
-        });
-    })();
-  </script>
 </body>
 </html>

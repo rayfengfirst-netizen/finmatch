@@ -34,13 +34,16 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8770
 
 浏览器打开：<http://127.0.0.1:8770/>（工具总面板），月度对账单：<http://127.0.0.1:8770/monthly-statement>
 
-### 月度对账单（框架）
+### 月度对账单（已落地）
 
 1. 页面上传两份文件：出入库记录、供应商对账单（单文件上限 50MB）。
-2. `POST /api/monthly-statement/run` 保存到 `data/jobs/<job_id>/`，调用 `scripts/monthly_statement.py` 的 `run()`，在 `output/` 下生成结果文件（当前为占位 CSV）。
-3. 返回 JSON 含 `download_url`；`GET /api/monthly-statement/download/<job_id>` 下载对账结果。任务文件在本地 `data/` 目录（已加入 `.gitignore`）。
+2. `POST /api/monthly-statement/run` 保存到 `data/jobs/<job_id>/`，调用 `scripts/monthly_statement.py`。
+3. 出入库预处理：新增 `入库总价 = 变动 * 入库价`，并筛选出入库类型（采购入库/退货出库）。
+4. 账单预处理：按 `供应商名称 + 采购单号 + SKU`（若无供应商则 `采购单号 + SKU`）先汇总数量与合计金额，再做对账。
+5. 对账输出 `reconciliation_result.xlsx`（工作表：`账单核对`、`出入库明细_筛选后`），数值统一两位小数。
+6. 历史记录：`GET /api/monthly-statement/runs` 查询，支持下载当次上传文件与结果文件。
 
-核对规则：在 `monthly_statement.run()` 内实现；入参约定见该文件注释。
+完整规则见：`docs/REQUIREMENTS_MONTHLY_RECONCILIATION.md`。
 
 ## 扩展脚本
 
