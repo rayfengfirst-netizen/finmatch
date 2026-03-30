@@ -9,22 +9,17 @@
 <body class="home">
   <div class="wrap">
     <header class="home-header">
-      <div class="home-header__main">
-        <figure class="home-mascot" aria-hidden="true">
-          <img src="/assets/img/mascot-kawaii-kitty.svg" width="88" height="88" alt="" />
-        </figure>
-        <div class="home-header__titles">
-          <h1>财配台 FinMatch</h1>
-          <p class="home-cheer">粉嫩小猫祝你顺利关账～ ✨</p>
-          <p class="sub">选择下方功能进入对应页面。后续会在此陆续接入更多财务工具。</p>
-        </div>
+      <div class="home-header__titles">
+        <h1>财配台 FinMatch</h1>
+        <p class="sub">选择下方功能进入对应页面。后续会在此陆续接入更多财务工具。</p>
       </div>
-      <div class="home-header__aside">
-        <div class="date-pendant" id="date-pendant" aria-live="polite">
-          <div class="date-pendant__ribbon" aria-hidden="true"></div>
-          <div class="date-pendant__inner">
-            <span class="date-pendant__day" id="date-day">—</span>
-            <span class="date-pendant__meta-line" id="date-meta">—</span>
+      <div class="date-pendant" id="date-pendant" aria-live="polite">
+        <div class="date-pendant__ribbon" aria-hidden="true"></div>
+        <div class="date-pendant__inner">
+          <span class="date-pendant__day" id="date-day">—</span>
+          <div class="date-pendant__meta">
+            <span class="date-pendant__ym" id="date-ym">—</span>
+            <span class="date-pendant__week" id="date-week">—</span>
           </div>
         </div>
       </div>
@@ -32,36 +27,28 @@
 
     <div class="tool-grid">
       <a class="tool-card tool-card--reconcile" href="/monthly-statement">
-        <span class="tool-card__icon" role="img" aria-label="对账">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10l2 4v12l-3-2-3 2-3-2-3 2-3-2V8l2-4z"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
-        </span>
+        <span class="tool-card__icon" role="img" aria-label="对账">🧾</span>
         <div class="tool-card__body">
           <h2>月度对账单</h2>
           <p>上传出入库与账单，自动汇总、比对并下载结果。</p>
         </div>
       </a>
       <a class="tool-card tool-card--amazon" href="http://8.218.58.28:6565/" target="_blank" rel="noopener noreferrer">
-        <span class="tool-card__icon" role="img" aria-label="包裹与报表">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        </span>
+        <span class="tool-card__icon" role="img" aria-label="包裹与报表">📦</span>
         <div class="tool-card__body">
           <h2>Amazon Summary 解析</h2>
           <p>上传 Summary 压缩包或多份 PDF，解析并生成 Excel（独立服务，新标签页打开）。</p>
         </div>
       </a>
       <a class="tool-card tool-card--ebay" href="http://8.218.58.28:6565/ebay-finance?job=a9bca88b4dd0474c8da5f167a940bc7d" target="_blank" rel="noopener noreferrer">
-        <span class="tool-card__icon" role="img" aria-label="财务图表">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h16M8 17V9M12 17v-6M16 17v-3"/></svg>
-        </span>
+        <span class="tool-card__icon" role="img" aria-label="财务图表">📊</span>
         <div class="tool-card__body">
           <h2>eBay 财务报告解析</h2>
           <p>上传财务报告 PDF 压缩包或多文件，维护汇率后解析并导出 Excel（独立服务，新标签页打开）。</p>
         </div>
       </a>
       <a class="tool-card tool-card--customs" href="http://8.218.58.28:8008/" target="_blank" rel="noopener noreferrer">
-        <span class="tool-card__icon" role="img" aria-label="报关与单证">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6M8 9h2"/></svg>
-        </span>
+        <span class="tool-card__icon" role="img" aria-label="报关与单证">🛃</span>
         <div class="tool-card__body">
           <h2>报关单核销台账系统</h2>
           <p>按公司管理报关单、发票与核销关系，支持导入、重算与台账导出（独立服务，新标签页打开）。</p>
@@ -78,8 +65,8 @@
       var m = d.getMonth() + 1;
       var day = d.getDate();
       document.getElementById("date-day").textContent = String(day);
-      document.getElementById("date-meta").textContent =
-        y + "年" + m + "月 · " + wk[d.getDay()];
+      document.getElementById("date-ym").textContent = y + "年" + m + "月";
+      document.getElementById("date-week").textContent = wk[d.getDay()];
     })();
   </script>
 </body>
